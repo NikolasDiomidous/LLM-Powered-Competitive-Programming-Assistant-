@@ -1,0 +1,122 @@
+[
+  {
+    "id": "cses_1633",
+    "title": "Dice Combinations",
+    "statement": "Your task is to count the number of ways to construct sum n by throwing a dice one or more times. Each throw produces an outcome between 1 and 6.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1634",
+    "title": "Minimizing Coins",
+    "statement": "You have n coins with certain values. Your task is to produce a sum of money x using the available coins in such a way that the number of coins is minimal.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1635",
+    "title": "Coin Combinations I",
+    "statement": "Consider a money system consisting of n coins. Your task is to calculate the number of distinct ordered ways you can produce a money sum x using the available coins.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1636",
+    "title": "Coin Combinations II",
+    "statement": "Consider a money system consisting of n coins. Your task is to calculate the number of distinct ways you can produce a money sum x using the available coins. The order of coins does not matter.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1637",
+    "title": "Removing Digits",
+    "statement": "You are given an integer n. On each step, you may subtract one of the digits from the number. Your task is to make the number equal to 0 using the minimum number of steps.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1638",
+    "title": "Grid Paths",
+    "statement": "Consider an n by n grid whose squares may have traps. Your task is to calculate the number of paths from the upper-left to the lower-right corner moving only right or down.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1158",
+    "title": "Book Shop",
+    "statement": "You are in a book shop which sells n different books. You know the price and number of pages of each book. You have a total of x euros to use. Find the maximum number of pages you can buy.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1746",
+    "title": "Array Description",
+    "statement": "You know that an array has n integers between 1 and m, and the absolute difference between two adjacent values is at most 1. Some values may be unknown (marked 0). Count the number of valid arrays.",
+    "categories": ["dp"]
+  },
+  {
+    "id": "cses_1639",
+    "title": "Edit Distance",
+    "statement": "Calculate the edit distance between two strings: minimum number of insert, remove, or modify operations to transform one string into another.",
+    "categories": ["dp", "string"]
+  },
+  {
+    "id": "cses_1145",
+    "title": "Increasing Subsequence",
+    "statement": "Given an array of n integers, find the length of the longest increasing subsequence.",
+    "categories": ["dp", "binary_search"]
+  },
+  {
+    "id": "cses_1667",
+    "title": "Message Route",
+    "statement": "Find the shortest route from node 1 to node n in an unweighted graph and print the path.",
+    "categories": ["graph"]
+  },
+  {
+    "id": "cses_1668",
+    "title": "Building Teams",
+    "statement": "Given a graph of n people and m friendship edges, divide them into 2 teams so that no two friends are on the same team. Print the team of each person or IMPOSSIBLE.",
+    "categories": ["graph"]
+  },
+  {
+    "id": "cses_1671",
+    "title": "Shortest Routes I",
+    "statement": "Find the shortest route from node 1 to all other nodes in a directed graph with non-negative weights.",
+    "categories": ["graph"]
+  },
+  {
+    "id": "cses_1672",
+    "title": "Shortest Routes II",
+    "statement": "Given a directed graph with weighted edges, process q queries: for each pair (a, b), find the shortest path from a to b.",
+    "categories": ["graph"]
+  },
+  {
+    "id": "cses_1675",
+    "title": "Road Reparation",
+    "statement": "Given an undirected weighted graph, find the minimum cost to make the graph connected (minimum spanning tree).",
+    "categories": ["graph"]
+  },
+  {
+    "id": "cses_1640",
+    "title": "Sum of Two Values",
+    "statement": "Given an array of n integers, find two values whose sum is x.",
+    "categories": ["two_pointers", "sorting"]
+  },
+  {
+    "id": "cses_1141",
+    "title": "Playlist",
+    "statement": "Given a playlist of n songs, find the longest sequence of consecutive songs where each song is unique.",
+    "categories": ["two_pointers"]
+  },
+  {
+    "id": "cses_1620",
+    "title": "Factory Machines",
+    "statement": "n machines, each takes a different time to make a product. Find the minimum time to make t products.",
+    "categories": ["binary_search"]
+  },
+  {
+    "id": "cses_1085",
+    "title": "Array Division",
+    "statement": "Given an array of n integers, divide it into k subarrays so that the maximum sum of a subarray is minimized.",
+    "categories": ["binary_search"]
+  },
+  {
+    "id": "cses_1621",
+    "title": "Distinct Numbers",
+    "statement": "You are given a list of n integers, count the number of distinct values.",
+    "categories": ["sorting", "data_structure"]
+  }
+]

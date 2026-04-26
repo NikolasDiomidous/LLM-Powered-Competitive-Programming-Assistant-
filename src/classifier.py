@@ -1,42 +1,53 @@
 import json
 from src.llm_client import ask
 from src.prompts import CLASSIFIER_SYSTEM, PROBLEM_TYPES
+from src.rag import retrieve_similar
 
-def _extract_json(raw: str) -> str:
-    text = raw.strip()
 
-    if text.startswith("```"):
-        lines = text.split("\n")
-        lines = lines[1:]
-        if lines and lines[-1].strip() == "```":
-            lines = lines[:-1]
-        text = "\n".join(lines)
+def classify(problem_text: str, use_rag: bool = True) -> dict:
+    if use_rag:
+        examples = retrieve_similar(problem_text, k=3)
+        user_msg = _build_user_msg_with_examples(problem_text, examples)
+    else:
+        user_msg = problem_text
 
-    return text.strip()
-def classify(problem_text: str) -> dict:
-    raw_response = ask(
-        system=CLASSIFIER_SYSTEM,
-        user=problem_text,
-    )
-
-    result = json.loads(_extract_json(raw_response))
-
+    raw = ask(system=CLASSIFIER_SYSTEM, user=user_msg)
+    result = json.loads(_extract_json(raw))
     _validate(result)
-
+    if use_rag:
+        result["retrieved_examples"] = examples
     return result
 
 
-def _validate(result: dict) -> None:
-    if not isinstance(result.get("types"), list):
-        raise ValueError(f"'types' must be a list, got {type(result.get('types'))}")
+def _build_user_msg_with_examples(problem_text: str, examples: list[dict]) -> str:
+    parts = ["Here are similar problems with known categories:\n"]
+    for ex in examples:
+        parts.append(f"- \"{ex['title']}\": {ex['statement']}")
+        parts.append(f"  Categories: {ex['categories']}\n")
+    parts.append(f"\nNow classify this new problem:\n\n{problem_text}")
+    return "\n".join(parts)
 
+
+def _extract_json(raw: str) -> str:
+    raw = raw.strip()
+    if raw.startswith("```"):
+        lines = raw.split("\n")
+        lines = [l for l in lines if not l.startswith("```")]
+        raw = "\n".join(lines)
+    return raw.strip()
+
+
+def _validate(result: dict) -> None:
+    if not isinstance(result, dict):
+        raise ValueError(f"expected dict, got {type(result)}")
+    if "types" not in result or not isinstance(result["types"], list):
+        raise ValueError("types must be a list")
     for t in result["types"]:
         if t not in PROBLEM_TYPES:
-            raise ValueError(f"Unknown category '{t}'. Allowed: {PROBLEM_TYPES}")
-
-    confidence = result.get("confidence")
-    if not isinstance(confidence, (int, float)) or not 0.0 <= confidence <= 1.0:
-        raise ValueError(f"'confidence' must be float in [0, 1], got {confidence}")
-
+            raise ValueError(f"invalid type: {t}")
+    if not isinstance(result.get("confidence"), (int, float)):
+        raise ValueError("confidence must be numeric")
+    if not 0 <= result["confidence"] <= 1:
+        raise ValueError("confidence must be in [0,1]")
     if not isinstance(result.get("reasoning"), str):
-        raise ValueError("'reasoning' must be a string")
+        raise ValueError("reasoning must be string")

@@ -35,6 +35,12 @@ if st.session_state.classification:
     st.write(f"**Confidence:** {c['confidence']:.2f}")
     st.write(f"**Reasoning:** {c['reasoning']}")
 
+    if "retrieved_examples" in c:
+        with st.expander("Similar problems found"):
+            for ex in c["retrieved_examples"]:
+                st.write(f"**{ex['title']}** (similarity {ex['score']:.2f}) — {ex['categories']}")
+                st.caption(ex['statement'])
+
 
 st.header("2. Hints")
 if st.session_state.problem:

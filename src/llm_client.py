@@ -26,3 +26,12 @@ def ask(
         messages=[{"role": "user", "content": user}],
     )
     return response.content[0].text
+def ask_multi(system: str, messages: list[dict],
+              model: str = DEFAULT_MODEL,
+              max_tokens: int = DEFAULT_MAX_TOKENS,
+              temperature: float = DEFAULT_TEMPERATURE) -> str:
+    response = client.messages.create(
+        model=model, max_tokens=max_tokens, temperature=temperature,
+        system=system, messages=messages,
+    )
+    return response.content[0].text
