@@ -14,21 +14,29 @@ Paste any competitive programming problem and CP Assistant will identify the alg
 - **Problem Classification** — categorises problems into 12 algorithm types (DP, graph, greedy, binary search, etc.) with reasoning and confidence score
 - **Progressive Hints** — 4-level hint ladder that builds from structural observations to a plain-English algorithm, enforcing strict anti-spoiler rules
 - **Approach Verification** — evaluates your proposed solution for correctness and complexity, giving targeted feedback
-- **Semantic Similar-Problem Search** — uses sentence-transformers embeddings to surface related CSES problems
+- **Semantic Similar-Problem Search** — uses sentence-transformers embeddings to surface related CSES problems, with a similarity threshold to filter out noise
 
 ## Tech Stack
 
-| Layer | Library |
-|---|---|
-| UI | Streamlit |
-| LLM | Anthropic SDK — Claude Sonnet |
-| Embeddings | sentence-transformers (`all-MiniLM-L6-v2`) |
-| Numerics | numpy |
-| Config | python-dotenv |
+| Layer      | Library                                                  |
+| ---------- | -------------------------------------------------------- |
+| UI         | Streamlit                                                |
+| LLM        | Anthropic SDK — Claude Sonnet 4.5 (`claude-sonnet-4-5`)  |
+| Embeddings | sentence-transformers (`all-MiniLM-L6-v2`)               |
+| Numerics   | numpy                                                    |
+| Config     | python-dotenv                                            |
+
+## Design Principles
+
+- Single source of truth for the LLM SDK in `llm_client.py`
+- Stateless hint engine — state lives in the caller (Streamlit session)
+- Strict JSON validation post-parse (fail fast, loud)
+- Defensive parsing of LLM output (regex-based JSON extraction handles preamble, markdown fences, trailing prose)
+- RAG with similarity threshold (0.45) to prevent irrelevant examples from polluting the prompt
 
 ## Getting Started
 
-**Prerequisites:** Python 3.8+, an [Anthropic API key](https://console.anthropic.com)
+**Prerequisites:** Python 3.10+, an [Anthropic API key](https://console.anthropic.com)
 
 ```bash
 # 1. Clone the repo
@@ -37,16 +45,17 @@ cd cp-assistant
 
 # 2. Create and activate a virtual environment
 python -m venv venv
-# Windows:
-venv\Scripts\activate
+# Windows (PowerShell):
+venv\Scripts\Activate.ps1
 # macOS / Linux:
 source venv/bin/activate
 
 # 3. Install dependencies
-pip install streamlit anthropic python-dotenv sentence-transformers numpy
+pip install -r requirements.txt
 
 # 4. Add your API key
-echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+# Create a .env file at the project root with:
+#   ANTHROPIC_API_KEY=sk-ant-...
 
 # 5. Run
 streamlit run app.py
@@ -75,19 +84,30 @@ cp-assistant/
 │   └── rag.py           # Sentence-transformer semantic search
 ├── data/
 │   └── cses_corpus.json # Reference CSES problem dataset for RAG
+├── requirements.txt
 └── .env                 # ANTHROPIC_API_KEY (not committed)
 ```
 
 ## Development Log
 
-| Day | What was built |
-|---|---|
-| 1 | LLM client wrapper, classifier prompt, problem-type classification |
-| 2 | Progressive hint engine |
-| 3 | Approach verifier |
-| 4 | Streamlit UI integrating all modules |
-| 5 | RAG with sentence-transformers and few-shot classification |
+| Day | What was built                                                |
+| --- | ------------------------------------------------------------- |
+| 1   | LLM client wrapper, classifier prompt, problem classification |
+| 2   | Progressive hint engine (4-level escalation)                  |
+| 3   | Approach verifier (4-outcome JSON)                            |
+| 4   | Streamlit UI integrating all modules                          |
+| 5   | RAG with sentence-transformers and few-shot classification    |
+
+## Limitations
+
+- The hint engine occasionally leaks at level 1 for textbook problems with strong LLM priors (e.g. Longest Increasing Subsequence).
+- The verifier may misclassify problems that have a famous "trap" sibling in standard CP curricula (e.g. Coin Combinations I vs II — the model defaults to the unordered-counting prior).
+- The CSES corpus is small (20 hand-labeled problems). RAG retrieval falls back gracefully when no relevant examples exist (similarity threshold filters out noise).
 
 ## License
 
 MIT — see [LICENSE](LICENSE) for details.
+
+## Author
+
+Nikolas D. — 2nd year Electrical and Computer Engineering student at NTUA, IEEE NTUA Competitive Programming team.
