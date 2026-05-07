@@ -29,12 +29,11 @@ def _build_user_msg_with_examples(problem_text: str, examples: list[dict]) -> st
 
 
 def _extract_json(raw: str) -> str:
-    raw = raw.strip()
-    if raw.startswith("```"):
-        lines = raw.split("\n")
-        lines = [l for l in lines if not l.startswith("```")]
-        raw = "\n".join(lines)
-    return raw.strip()
+    import re
+    match = re.search(r'\{.*\}', raw, re.DOTALL)
+    if not match:
+        raise ValueError(f"no JSON object found in response: {raw[:200]}")
+    return match.group(0)
 
 
 def _validate(result: dict) -> None:
